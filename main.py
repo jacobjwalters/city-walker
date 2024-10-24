@@ -47,9 +47,9 @@ def main():
     print(f"You have visited {percentage_visited:.2f}% of the city's streets.")
     
     # Generate a new route (example)
-    start_point = (37.7749, -122.4194)  # Example coordinates, replace with your starting point
+    start_point = (55.9, -3.2)  # Example coordinates, replace with your starting point
     print("Generating a new route...")
-    route = generate_route(G, start_point, distance=5000)  # 5 km route
+    route = generate_route(G, start_point, set(visited_streets), distance=5000)  # 5 km route
     export_route(G, route, 'new_route.gpx')
     print("New route exported to new_route.gpx.")
 

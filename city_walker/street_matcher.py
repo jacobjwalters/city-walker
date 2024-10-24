@@ -5,18 +5,24 @@ from rtree import index
 
 def build_spatial_index(G):
     """
-    Build an R-tree spatial index for the edges (street segments) of the graph.
-    
+    Build a spatial index for the edges in the graph, which helps with matching GPX points to streets.
+
     Parameters:
         G (networkx.MultiDiGraph): The street network graph.
-    
+
     Returns:
-        rtree.index.Index: An R-tree index for spatial queries.
+        rtree.index.Index: A spatial index of the graph's edges.
     """
     idx = index.Index()
+
     for u, v, key, data in G.edges(keys=True, data=True):
-        edge_geom = data.get('geometry', LineString([G.nodes[u]['x'], G.nodes[u]['y'], G.nodes[v]['x']]))
-        idx.insert(key, edge_geom.bounds, obj=(u, v))
+        u_coord = (G.nodes[u]['x'], G.nodes[u]['y'])
+        v_coord = (G.nodes[v]['x'], G.nodes[v]['y'])
+
+        line = LineString([u_coord, v_coord])
+
+        idx.insert(key, line.bounds, obj=(u, v, key))
+
     return idx
 
 def match_streets(gps_points, G, spatial_index):
@@ -36,7 +42,7 @@ def match_streets(gps_points, G, spatial_index):
         point = Point(lon, lat)
         nearest_edges = list(spatial_index.nearest(point.bounds, 1, objects=True))
         for edge in nearest_edges:
-            u, v = edge.object
+            u, v, _ = edge.object
             matched_streets.add((u, v))
     return matched_streets
 
