@@ -1,0 +1,6 @@
+gpxpy
+osmnx
+shapely
+geopandas
+rtree
+

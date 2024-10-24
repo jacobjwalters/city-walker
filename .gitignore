@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Map/tracking data
+map_data/
+gpx_files/
+routes/
+cache
